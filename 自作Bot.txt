@@ -2,16 +2,16 @@ import discord
 from discord.ext import commands
 
 intents = discord.Intents.default()
-intents.members = True  
+intents.members = True  # メンバー管理に必要
 intents.message_content = True
 intents.reactions = True
 intents.guilds = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-TOKEN = '???' # Botのトークンを張り付け
-VERIFY_CHANNEL_ID = ???  # ???のところを自分のチャンネルのIDに変更
-VERIFY_ROLE_ID = ???    # ???のところをロールIDに変更
+TOKEN = 'MTM5ODk4NTcwODMwMzAyNDIwOA.GGbaC-.1bA4lJBtwB3gkr67S6KPTrtkrEkCKwNh2WQb2I'
+VERIFY_CHANNEL_ID = 1352517879802630230  # 認証チャンネルのID（右クリック→IDをコピー）
+VERIFY_ROLE_ID = 1352518936901714010    # 認証後に付与するロールのID
 EMOJI = "✅"  # 認証リアクション用の絵文字
 
 @bot.event
@@ -46,7 +46,7 @@ async def on_raw_reaction_add(payload):
 
     await member.add_roles(role)
     try:
-        await member.send("✅ 認証が完了しました！鯖名へようこそ！")　# 鯖名のところを変える。例:まよ鯖
+        await member.send("✅ 認証が完了しました！ようこそ！")
     except:
         pass
 bot.run(TOKEN)

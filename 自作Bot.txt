@@ -1,0 +1,52 @@
+import discord
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.members = True  
+intents.message_content = True
+intents.reactions = True
+intents.guilds = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+TOKEN = '???' # Botのトークンを張り付け
+VERIFY_CHANNEL_ID = ???  # ???のところを自分のチャンネルのIDに変更
+VERIFY_ROLE_ID = ???    # ???のところをロールIDに変更
+EMOJI = "✅"  # 認証リアクション用の絵文字
+
+@bot.event
+async def on_ready():
+    print(f"{bot.user} がログインしました。")
+
+@bot.command()
+async def verify(ctx):
+    if ctx.channel.id != VERIFY_CHANNEL_ID:
+        return
+    msg = await ctx.send("認証したい方はこのメッセージに ✅ を押してください。")
+    await msg.add_reaction(EMOJI)
+
+@bot.event
+async def on_raw_reaction_add(payload):
+    if payload.channel_id != VERIFY_CHANNEL_ID:
+        return
+    if payload.emoji.name != EMOJI:
+        return
+
+    guild = bot.get_guild(payload.guild_id)
+    if guild is None:
+        return
+
+    role = guild.get_role(VERIFY_ROLE_ID)
+    if role is None:
+        return
+
+    member = guild.get_member(payload.user_id)
+    if member is None or member.bot:
+        return
+
+    await member.add_roles(role)
+    try:
+        await member.send("✅ 認証が完了しました！鯖名へようこそ！")　# 鯖名のところを変える。例:まよ鯖
+    except:
+        pass
+bot.run(TOKEN)
